@@ -16,7 +16,7 @@ var init =  function(){
     
 
 
-    var grid = drawGrid(-8.0620287, -34.8987418, 53.902257, 27.561640, 2, mymap);
+    var grid = drawGrid(-8.0620287, -34.8987418, 53.902257, 27.561640, 100, mymap);
 
     debugger;
 }
