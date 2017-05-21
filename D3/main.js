@@ -70,7 +70,7 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
 
    					console.info(e);
 				});
-				rect.options.color = d3.interpolateReds(cor(pythonOut[(row * 100) + column].hits))
+				rect.options.color = d3.interpolateBlues(cor(pythonOut[(row * 100) + column].hits))
 				rect.addTo(mymap)	
 				grid[row].push(rect);
 			}
