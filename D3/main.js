@@ -65,7 +65,7 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
 
 							 										];
 				var rect = L.rectangle(bounds, 
-					{weight: 0}).
+					{weight: 0, fillOpacity : 0.4}).
 					on('click', function (e) {
 
    					console.info(e);
