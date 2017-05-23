@@ -32,12 +32,12 @@ def hits(lat, long, radius, section):
 
 dict = eval(open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/data/recife/gridOutput.log', 'r').read())
 
-
-f = open('pythonOutPut', 'w')
+section = "Transportation"
+f = open('pythonOutPut' + section + '.js', 'w')
 
 for keys in dict:
     lat = dict.get(keys)[0]
     long = dict.get(keys)[1]
-    f.write("{id: " + str(keys) + ", hits :" + str(hits(long, lat, 1000, "Education")) + "},\n")
+    f.write("{id: " + str(keys) + ", hits :" + str(hits(long, lat, 1000, section)) + "},\n")
 
 f.close();
