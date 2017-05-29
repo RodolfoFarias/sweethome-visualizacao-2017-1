@@ -27,7 +27,7 @@ var init =  function(){
 
 
     var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap);
-
+	debugger
 
     /*
     for (var i = 0; i < grid.length; i++) {
@@ -50,7 +50,7 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
 	var grid = new Array();
 	var cor = d3.scaleLinear()
 		.range([0,1])
-		.domain([d3.min(pythonOut, function(d){return d.hits}), d3.max(pythonOut, function(d){return d.hits})]);
+		.domain([d3.min(transportation, function(d){return d.hits}), d3.max(transportation, function(d){return d.hits})]);
 
 		for(var row = 0; row < cells; row++){
 			grid.push( new Array())
@@ -70,8 +70,11 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
 
    					console.info(e);
 				});
-				rect.options.color = d3.interpolateBlues(cor(pythonOut[(row * 100) + column].hits))
-				rect.addTo(mymap)	
+				rect.options.color = d3.interpolateBlues(cor(transportation[(row * 100) + column].hits))
+				if(transportation[(row * 100) + column].hits > 0){
+					rect.addTo(mymap);
+				} 
+					
 				grid[row].push(rect);
 			}
 				
