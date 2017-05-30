@@ -1,5 +1,6 @@
 window.onload = function(){
-	init();
+	var mymap;
+	init(mymap);
 }
 
 // function measure(lat1, lon1, lat2, lon2){  // generally used geo measurement function
@@ -14,8 +15,8 @@ window.onload = function(){
 //     return d * 1000; // meters
 // }
 
-var init =  function(){
-	var mymap = L.map('mapid').setView([-8.0620287, -34.8987418], 13);
+var init =  function(mymap){
+	mymap = L.map('mapid').setView([-8.0620287, -34.8987418], 13);
 
 	mapLink = '<a href="https://carto.com/attribution">Carto</a>';
     L.tileLayer(
@@ -26,8 +27,64 @@ var init =  function(){
     
 
 
-    var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap);
-	debugger
+    var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+
+    var command = L.control({position: 'topright'});
+
+	command.onAdd = function (map) {
+    	var div = L.DomUtil.create('div', 'radiobox');
+
+    	div.innerHTML =` 
+    		<form action="" >
+  			<input class="radio" type="radio" name="section" value="education" checked="checked">Education<br>
+  			<input class="radio" type="radio" name="section" value="entertainment">Entertainment<br>
+  			<input class="radio" type="radio" name="section" value="financial">Financial <br>
+  			<input class="radio" type="radio" name="section" value="healthcare">Healthcare <br>
+  			<input class="radio" type="radio" name="section" value="sustenance">Sustenance <br>
+  			<input class="radio" type="radio" name="section" value="transportation">Transportation <br>
+  			<input class="radio" type="radio" name="section" value="others">Others <br>
+		</form>`; 
+    	return div;
+	};
+
+	command.addTo(mymap);
+
+
+	// add the event handler
+	function handleCommand() {
+
+		removeGrid(mymap);
+		switch(this.value) {
+    		case "education":
+        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
+        		break;
+    		case "entertainment":
+        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, entertainment);
+        		break;
+        	case "financial":
+        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, financial);
+        		break;	
+   			case "healthcare":
+        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, healthcare);
+        		break;
+        	case "sustenance":
+        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, sustenance);
+        		break;
+        	case "transportation":
+        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+        		break;
+        	case "others":
+        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, others);
+        		break;
+		}
+	}
+
+	
+	var elements = document.getElementsByClassName("radio");
+	for (var i = 0; i < elements.length; i++) {
+  		elements[i].addEventListener("click", handleCommand);
+	}
+
 
     /*
     for (var i = 0; i < grid.length; i++) {
@@ -41,7 +98,7 @@ var init =  function(){
     */
 }
 
-var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
+var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap, section){
 
 	var widthTotal =  Math.abs(lat_min - lat_max)
 	var heightTotal = Math.abs(long_min - long_max)
@@ -50,7 +107,7 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
 	var grid = new Array();
 	var cor = d3.scaleLinear()
 		.range([0,1])
-		.domain([d3.min(transportation, function(d){return d.hits}), d3.max(transportation, function(d){return d.hits})]);
+		.domain([d3.min(section, function(d){return d.hits}), d3.max(section, function(d){return d.hits})]);
 
 		for(var row = 0; row < cells; row++){
 			grid.push( new Array())
@@ -65,12 +122,10 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
 
 							 										];
 				var rect = L.rectangle(bounds, 
-					{weight: 0, fillOpacity : 0.4}).
-					on('click', function (e) {
-
-   					console.info(e);
-				});
-				rect.options.color = d3.interpolateBlues(cor(transportation[(row * 100) + column].hits))
+					{weight: 0, fillOpacity : 0.4})
+					;
+				rect.options.color = d3.interpolateBlues(cor(section[(row * 100) + column].hits))
+				rect.options.className = "rect"
 				if(transportation[(row * 100) + column].hits > 0){
 					rect.addTo(mymap);
 				} 
@@ -81,3 +136,14 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap){
 		}	
 	return grid	
 }	
+
+
+var removeGrid = function(mymap) {
+
+	mymap.eachLayer(function (layer) {
+		if(layer.options.className === "rect"){
+			mymap.removeLayer(layer);	
+		}
+	});
+
+}

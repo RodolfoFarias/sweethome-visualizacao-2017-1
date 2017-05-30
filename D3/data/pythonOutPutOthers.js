@@ -1,4 +1,4 @@
-var other = [
+var others = [
 {id: 67, hits :0},
 {id: 70, hits :0},
 {id: 72, hits :0},
