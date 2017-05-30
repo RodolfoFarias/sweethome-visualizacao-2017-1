@@ -3,19 +3,10 @@ window.onload = function(){
 	init(mymap);
 }
 
-// function measure(lat1, lon1, lat2, lon2){  // generally used geo measurement function
-//     var R = 6378.137; // Radius of earth in KM
-//     var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
-//     var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
-//     var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-//     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-//     Math.sin(dLon/2) * Math.sin(dLon/2);
-//     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-//     var d = R * c;
-//     return d * 1000; // meters
-// }
+var myOpacity = 0.4;
 
 var init =  function(mymap){
+
 	mymap = L.map('mapid').setView([-8.0620287, -34.8987418], 13);
 
 	mapLink = '<a href="https://carto.com/attribution">Carto</a>';
@@ -85,6 +76,8 @@ var init =  function(mymap){
   		elements[i].addEventListener("click", handleCommand);
 	}
 
+	debugger
+
 
     /*
     for (var i = 0; i < grid.length; i++) {
@@ -122,15 +115,15 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap, sect
 
 							 										];
 				var rect = L.rectangle(bounds, 
-					{weight: 0, fillOpacity : 0.4})
+					{weight: 0, fillOpacity : myOpacity})
 					;
 				rect.options.color = d3.interpolateBlues(cor(section[(row * 100) + column].hits))
 				rect.options.className = "rect"
 				if(transportation[(row * 100) + column].hits > 0){
 					rect.addTo(mymap);
+					grid[row].push(rect);
 				} 
 					
-				grid[row].push(rect);
 			}
 				
 		}	
@@ -147,3 +140,14 @@ var removeGrid = function(mymap) {
 	});
 
 }
+
+var setOpacity = function(grid, _opacity) {
+	myOpacity = _opacity;
+	grid.forEach(function(a) {
+		a.forEach(function(e) {
+			e.setStyle({fillOpacity : _opacity})
+
+    	})
+	})
+}
+
