@@ -20,6 +20,7 @@ var init =  function(mymap){
 
     var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
 
+    // radiobox begin
     var command = L.control({position: 'topright'});
 
 	command.onAdd = function (map) {
@@ -47,25 +48,25 @@ var init =  function(mymap){
 		removeGrid(mymap);
 		switch(this.value) {
     		case "education":
-        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
+        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
         		break;
     		case "entertainment":
-        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, entertainment);
+        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, entertainment);
         		break;
         	case "financial":
-        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, financial);
+        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, financial);
         		break;	
    			case "healthcare":
-        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, healthcare);
+        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, healthcare);
         		break;
         	case "sustenance":
-        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, sustenance);
+        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, sustenance);
         		break;
         	case "transportation":
-        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
         		break;
         	case "others":
-        		var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, others);
+        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, others);
         		break;
 		}
 	}
@@ -76,6 +77,28 @@ var init =  function(mymap){
   		elements[i].addEventListener("click", handleCommand);
 	}
 
+	//radiobox end
+
+	var slider = L.control({position: 'topright'});
+
+	slider.onAdd = function (map) {
+    	var div = L.DomUtil.create('div', 'slider');
+
+    	div.innerHTML ='<input type="range" id="myRange" value="40">'; 
+    	return div;
+	};
+
+	slider.addTo(mymap);
+
+	var refSlider = document.getElementById('myRange');
+	
+	refSlider.addEventListener("click", function(event){
+    	event.preventDefault()
+	});
+
+	refSlider.onchange = function(){
+		setOpacity(grid, this.value/100)
+	}
 	debugger
 
 
