@@ -17,9 +17,10 @@ var init =  function(mymap){
     }).addTo(mymap);
     
 
-
-    var grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
-
+	var grid;
+	var color;
+    [grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+	
     // radiobox begin
     var command = L.control({position: 'topright'});
 
@@ -48,25 +49,27 @@ var init =  function(mymap){
 		removeGrid(mymap);
 		switch(this.value) {
     		case "education":
-        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
+        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
+				createLegend(mymap, color);
         		break;
     		case "entertainment":
-        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, entertainment);
+        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, entertainment);
+				createLegend(mymap, color);
         		break;
         	case "financial":
-        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, financial);
+        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, financial);
         		break;	
    			case "healthcare":
-        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, healthcare);
+        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, healthcare);
         		break;
         	case "sustenance":
-        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, sustenance);
+        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, sustenance);
         		break;
         	case "transportation":
-        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
         		break;
         	case "others":
-        		grid = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, others);
+        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, others);
         		break;
 		}
 	}
@@ -79,28 +82,11 @@ var init =  function(mymap){
 
 	//radiobox end
 
-	var slider = L.control({position: 'topright'});
-
-	slider.onAdd = function (map) {
-    	var div = L.DomUtil.create('div', 'slider');
-
-    	div.innerHTML ='<input type="range" id="myRange" value="40">'; 
-    	return div;
-	};
-
-	slider.addTo(mymap);
-
-	var refSlider = document.getElementById('myRange');
+	createSlider(mymap, grid);
 	
-	refSlider.addEventListener("click", function(event){
-    	event.preventDefault()
-	});
-
-	refSlider.onchange = function(){
-		setOpacity(grid, this.value/100)
-	}
-	debugger
-
+	createLegend(mymap, color);
+	
+	debugger;
 
     /*
     for (var i = 0; i < grid.length; i++) {
@@ -150,9 +136,8 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap, sect
 			}
 				
 		}	
-	return grid	
+	return [grid, cor]	
 }	
-
 
 var removeGrid = function(mymap) {
 
@@ -174,3 +159,45 @@ var setOpacity = function(grid, _opacity) {
 	})
 }
 
+var createLegend = function(map, color){
+	var legend = L.control({position: 'bottomright'});
+	var temp = color.domain()[1] - color.domain()[0]
+		temp = temp/5
+	legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, color.domain()[1], temp * 2, temp * 3, temp * 4, temp * 5],
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + d3.interpolateBlues(color(grades[i] + 1)) + '"></i> '
+			console.log(d3.interpolateBlues(color(grades[i] + 1)))
+    }
+	//d3.interpolateBlues(color(grades[i] + 1))
+    return div;
+	};
+
+	legend.addTo(map);
+
+}
+
+var createSlider = function(map, grid){
+	var slider = L.control({position: 'topright'});
+
+	slider.onAdd = function (map) {
+    	var div = L.DomUtil.create('div', 'slider');
+
+    	div.innerHTML ='<input type="range" id="myRange" value="40">'; 
+    	return div;
+	};
+
+	slider.addTo(map);
+
+	var refSlider = document.getElementById('myRange');
+
+	refSlider.onchange = function(){
+		setOpacity(grid, this.value/100)
+	}
+}
