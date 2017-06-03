@@ -4,6 +4,8 @@ window.onload = function(){
 }
 
 var myOpacity = 0.4;
+var grid = new Array();
+var color
 
 var init =  function(mymap){
 
@@ -17,9 +19,7 @@ var init =  function(mymap){
     }).addTo(mymap);
     
 
-	var grid;
-	var color;
-    [grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+    [grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
 	
     // radiobox begin
     var command = L.control({position: 'topright'});
@@ -50,26 +50,31 @@ var init =  function(mymap){
 		switch(this.value) {
     		case "education":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
-				createLegend(mymap, color);
+				updateLegend(mymap, color);
         		break;
     		case "entertainment":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, entertainment);
-				createLegend(mymap, color);
+				updateLegend(mymap, color);
         		break;
         	case "financial":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, financial);
+				updateLegend(mymap, color);        		
         		break;	
    			case "healthcare":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, healthcare);
+				updateLegend(mymap, color);
         		break;
         	case "sustenance":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, sustenance);
+				updateLegend(mymap, color);
         		break;
         	case "transportation":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+				updateLegend(mymap, color);
         		break;
         	case "others":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, others);
+				updateLegend(mymap, color);
         		break;
 		}
 	}
@@ -85,6 +90,7 @@ var init =  function(mymap){
 	createSlider(mymap, grid);
 	
 	createLegend(mymap, color);
+
 	
 	debugger;
 
@@ -106,10 +112,9 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap, sect
 	var heightTotal = Math.abs(long_min - long_max)
 	var eachWidth = widthTotal/cells
 	var eachHeight = heightTotal/cells
-	var grid = new Array();
 	var cor = d3.scaleLinear()
 		.range([0,1])
-		.domain([d3.min(section, function(d){return d.hits}), d3.max(section, function(d){return d.hits})]);
+		.domain([0, d3.max(section, function(d){return d.hits})]);
 
 		for(var row = 0; row < cells; row++){
 			grid.push( new Array())
@@ -143,7 +148,7 @@ var removeGrid = function(mymap) {
 
 	mymap.eachLayer(function (layer) {
 		if(layer.options.className === "rect"){
-			mymap.removeLayer(layer);	
+			layer.remove();	
 		}
 	});
 
@@ -166,16 +171,15 @@ var createLegend = function(map, color){
 	legend.onAdd = function (map) {
 
     var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, color.domain()[1], temp * 2, temp * 3, temp * 4, temp * 5],
+        grades = [0, temp, temp * 2, temp * 3, temp * 4, temp * 5],
         labels = [];
 
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
-            '<i style="background:' + d3.interpolateBlues(color(grades[i] + 1)) + '"></i> '
-			console.log(d3.interpolateBlues(color(grades[i] + 1)))
+        '<i style="background:' + 	d3.interpolateBlues(color(grades[i] + 1)) + '"></i> <text class = legendText>' + grades[i].toFixed(2) + '</text><br>' ;
+
     }
-	//d3.interpolateBlues(color(grades[i] + 1))
     return div;
 	};
 
@@ -200,4 +204,16 @@ var createSlider = function(map, grid){
 	refSlider.onchange = function(){
 		setOpacity(grid, this.value/100)
 	}
+}
+
+var updateLegend = function(map, color){
+	var temp = color.domain()[1] - color.domain()[0]
+		temp = temp/5
+	var grades = [0, temp, temp * 2, temp * 3, temp * 4, temp * 5];
+
+	for (var i = 0; i < grades.length; i++) {
+        d3.selectAll(".legendText").nodes()[i].innerHTML = grades[i].toFixed(2)
+    }
+
+
 }
