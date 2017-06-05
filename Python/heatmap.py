@@ -1,5 +1,6 @@
 #C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/RecifeTransportation.geojson
 import geojson
+import csv
 from geopy.distance import vincenty
 
 def calcDist(lat1, long1, lat2, long2):
@@ -24,20 +25,36 @@ def hits(lat, long, radius, section):
 
     for x in data.features:
     
-        dist = calcDist(lat, long, x.geometry.coordinates[0], x.geometry.coordinates[1])
+        dist = calcDist(lat, long, x.geometry.coordinates[1], x.geometry.coordinates[0])
         if dist < radius:
             counts = counts + (radius - dist)/radius
     	
     return counts
 
-dict = eval(open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/data/recife/gridOutput.log', 'r').read())
+#dict = eval(open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/data/recife/gridOutput.log', 'r').read())
 
-section = "Transportation"
-f = open('pythonOutPut' + section + '.js', 'w')
+#section = "Transportation"
+#f = open('pythonOutPut' + section + '.js', 'w')
 
-for keys in dict:
-    lat = dict.get(keys)[0]
-    long = dict.get(keys)[1]
-    f.write("{id: " + str(keys) + ", hits :" + str(hits(long, lat, 1000, section)) + "},\n")
+#for keys in dict:
+#    lat = dict.get(keys)[0]
+#    long = dict.get(keys)[1]
+#    f.write("{id: " + str(keys) + ", hits :" + str(hits(long, lat, 1000, section)) + "},\n")
 
-f.close();
+#f.close();
+
+with open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/data/recife/anuncios-de-imoveis-recife-pe.csv', encoding="utf8") as csvfile, open('some.csv', 'w', encoding='utf8' ) as f:
+    reader = csv.DictReader(csvfile)
+    writer = csv.DictWriter(f, fieldnames=reader.fieldnames, lineterminator='\n')
+    writer.writeheader()
+    for row in reader:
+        row['Education'] = hits(row['Latitude'], row['Longitude'], 1000, 'Education')
+        row['Entertainment'] = hits(row['Latitude'], row['Longitude'], 1000, 'Entertainment')
+        row['Financial'] = hits(row['Latitude'], row['Longitude'], 1000, 'Financial')
+        row['Healthcare'] = hits(row['Latitude'], row['Longitude'], 1000, 'Healthcare')
+        row['Sustenance'] = hits(row['Latitude'], row['Longitude'], 1000, 'Sustenance')
+        row['Transportation'] = hits(row['Latitude'], row['Longitude'], 1000, 'Transportation')
+        row['Others'] = hits(row['Latitude'], row['Longitude'], 1000, 'Others')
+        writer.writerow(row)
+
+    
