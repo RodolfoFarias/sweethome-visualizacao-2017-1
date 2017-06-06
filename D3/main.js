@@ -91,8 +91,9 @@ var init =  function(mymap){
 	
 	createLegend(mymap, color);
 
+	createGraph();
 	
-	debugger;
+	//debugger;
 
     /*
     for (var i = 0; i < grid.length; i++) {
@@ -214,6 +215,8 @@ var updateLegend = function(map, color){
 	for (var i = 0; i < grades.length; i++) {
         d3.selectAll(".legendText").nodes()[i].innerHTML = grades[i].toFixed(2)
     }
+}
 
+var createGraph = function(){
 
 }
