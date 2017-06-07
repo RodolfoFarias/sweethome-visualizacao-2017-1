@@ -104,7 +104,7 @@ d3.csv("data.csv", function(error, data) {
   // Add and store a brush for each axis.
   g.append("g")
       .attr("class", "brush")
-      .call(d3.brushY().on("brush", test)) 
+      .each(function(d) {d3.select(this).call(y[d].brush = d3.brushY().extent(y[d]).on("brush", test)); })
     .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
