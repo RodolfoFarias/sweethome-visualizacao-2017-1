@@ -104,7 +104,7 @@ d3.csv("data.csv", function(error, data) {
   // Add and store a brush for each axis.
   g.append("g")
       .attr("class", "brush")
-      .each(function(d) {d3.select(this).call(y[d].brush = d3.brushY().extent(y[d]).on("brush", test)); })
+      .each(function(d) {d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush", brush)); })
     .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
@@ -116,7 +116,7 @@ function path(d) {
 }
 
 function brush() {
-  var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
+  var actives = dimensions.filter(function(p) { debugger; return true; return !y[p].brush.empty(); }),
       extents = actives.map(function(p) { return y[p].brush.extent(); });
   foreground.style("display", function(d) {
     return actives.every(function(p, i) {
