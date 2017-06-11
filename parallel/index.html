@@ -62,16 +62,16 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("data.csv", function(error, cars) {
+d3.csv("data.csv", function(error, data) {
   // Extract the list of dimensions and create a scale for each.
-    //cars[0] contains the header elements, then for all elements in the header
+    //data[0] contains the header elements, then for all elements in the header
     //different than "name" it creates and y axis in a dictionary by variable name
-  x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
+  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
     if(d == "name") {
         return false;
     }
     return y[d] = d3.scaleLinear()
-        .domain(d3.extent(cars, function(p) { 
+        .domain(d3.extent(data, function(p) { 
             return +p[d]; }))
         .range([height, 0]);
   }));
@@ -82,7 +82,7 @@ d3.csv("data.csv", function(error, cars) {
   background = svg.append("g")
       .attr("class", "background")
     .selectAll("path")
-      .data(cars)
+      .data(data)
     .enter().append("path")
       .attr("d", path);
 
@@ -90,7 +90,7 @@ d3.csv("data.csv", function(error, cars) {
   foreground = svg.append("g")
       .attr("class", "foreground")
     .selectAll("path")
-      .data(cars)
+      .data(data)
     .enter().append("path")
       .attr("d", path);
 
@@ -102,28 +102,7 @@ d3.csv("data.csv", function(error, cars) {
       .attr("transform", function(d) {  return "translate(" + x(d) + ")"; })
       .call(d3.drag()
         .subject(function(d) { return {x: x(d)}; })
-        .on("start", function(d) {
-          dragging[d] = x(d);
-          background.attr("visibility", "hidden");
-        })
-        .on("drag", function(d) {
-          dragging[d] = Math.min(width, Math.max(0, d3.event.x));
-          foreground.attr("d", path);
-          dimensions.sort(function(a, b) { return position(a) - position(b); });
-          x.domain(dimensions);
-          g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
-        })
-        .on("end", function(d) {
-          delete dragging[d];
-          transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
-          transition(foreground).attr("d", path);
-          background
-              .attr("d", path)
-            .transition()
-              .delay(500)
-              .duration(0)
-              .attr("visibility", null);
-        }));
+        );
   // Add an axis and title.
   g.append("g")
       .attr("class", "axis")
