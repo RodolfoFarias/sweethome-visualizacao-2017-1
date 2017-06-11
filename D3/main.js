@@ -93,6 +93,7 @@ var init =  function(mymap){
 	
 	createLegend(mymap, color);
 
+
 	//createGraph(mymap);
 	
 	//debugger;
@@ -243,7 +244,7 @@ var createGraph = function(map){
 	graph.addTo(map);
 	
 	var margin = {top: 30, right: 10, bottom: 10, left: 10},
-    	width = 600 - margin.left - margin.right,
+    	width = 800 - margin.left - margin.right,
     	height = 200 - margin.top - margin.bottom;
 
 	var x = d3.scaleBand().rangeRound([0, width]).padding(1),
@@ -268,12 +269,26 @@ var createGraph = function(map){
 
 
 
-	d3.csv("data.csv", function(error, data) {
+	d3.csv("some.csv", function(error, data) {
+		//make markers on map
+		//createMarkers(map, data)
+
 	  // Extract the list of dimensions and create a scale for each.
 	    //data[0] contains the header elements, then for all elements in the header
 	    //different than "name" it creates and y axis in a dictionary by variable name
 	  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
-	    if(d == "name") {
+	  	
+	    if(	d == "Titulo" || 
+	    	d == "Rua" || 
+	    	d == "Bairro" || 
+	    	d == "CEP" || 
+	    	d == "Latitude" || 
+	    	d == "Longitude" || 
+	    	d == "Tipo Vendedor" || 
+	    	d == "Data Coleta" ||
+	    	d === "Area Total (m2)" ||
+	    	d == "Taxa Condomínio" ||
+	    	d == "Tipo") {
 	        return false;
 	    }
 	    return y[d] = d3.scaleLinear()
@@ -361,7 +376,7 @@ var createGraph = function(map){
 	      	
 	        return dimensions.every(function(p, i) {
 	        	console.log(i)
-	        	console.log(p)
+	        	//console.log(p)
 	            if(extents[i][0]==0) {
 	                return true;
 	            }
@@ -370,4 +385,18 @@ var createGraph = function(map){
 	      });
 	}
 
+}
+
+var createMarkers = function(map, data){
+
+	var markers = new L.FeatureGroup();
+
+
+	data.forEach(function(d) {
+		var m = new L.Marker([d["Latitude"], d["Longitude"]]);
+		markers.addLayer(m);
+
+	});
+
+    map.addLayer(markers);
 }
