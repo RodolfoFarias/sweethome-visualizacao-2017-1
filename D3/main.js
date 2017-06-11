@@ -87,11 +87,13 @@ var init =  function(mymap){
 
 	//radiobox end
 
+	createGraph(mymap);
+
 	createSlider(mymap, grid);
 	
 	createLegend(mymap, color);
 
-	createGraph(mymap);
+	//createGraph(mymap);
 	
 	//debugger;
 
@@ -228,135 +230,144 @@ var updateLegend = function(map, color){
 }
 
 var createGraph = function(map){
-	var slider = L.control({position: 'topright'});
 
-	slider.onAdd = function (map) {
-    	var div = L.DomUtil.create('div', 'slider');
+	var graph = L.control({position: 'bottomleft'});
 
-    	div.innerHTML ='<input type="range" id="myRange" value="40">'; 
-    	return div;
-	};
+	graph.onAdd = function(map) {
+		var div = L.DomUtil.create('div', 'graph');
+
+	    	div.innerHTML ='<div id="myDiv">'; 
+
+	    	return div;
+    }
+	graph.addTo(map);
+	
 	var margin = {top: 30, right: 10, bottom: 10, left: 10},
-    width = 600 - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    	width = 600 - margin.left - margin.right,
+    	height = 200 - margin.top - margin.bottom;
 
-var x = d3.scaleBand().rangeRound([0, width]).padding(1),
+	var x = d3.scaleBand().rangeRound([0, width]).padding(1),
     y = {},
     dragging = {};
 
 
-var line = d3.line(),
-    //axis = d3.axisLeft(x),
-    background,
-    foreground,
-    extents;
+	var line = d3.line(),
+    	//axis = d3.axisLeft(x),
+    	background,
+    	foreground,
+    	extents;
 
-var svg = d3.select(map.getPanes().overlayPane).append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	var svg = d3.select(".graph").append("svg")
+    	.attr("width", width + margin.left + margin.right)
+    	.attr("height", height + margin.top + margin.bottom)
+  	.append("g")
+    	.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    	.on("mouseover", function () {map.dragging.disable();})
+        .on("mouseout", function () {map.dragging.enable();});
 
 
 
 
-d3.csv("data.csv", function(error, data) {
-  // Extract the list of dimensions and create a scale for each.
-    //data[0] contains the header elements, then for all elements in the header
-    //different than "name" it creates and y axis in a dictionary by variable name
-  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
-    if(d == "name") {
-        return false;
-    }
-    return y[d] = d3.scaleLinear()
-        .domain(d3.extent(data, function(p) { 
-            return +p[d]; }))
-        .range([height, 0]);
-  }));
+	d3.csv("data.csv", function(error, data) {
+	  // Extract the list of dimensions and create a scale for each.
+	    //data[0] contains the header elements, then for all elements in the header
+	    //different than "name" it creates and y axis in a dictionary by variable name
+	  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+	    if(d == "name") {
+	        return false;
+	    }
+	    return y[d] = d3.scaleLinear()
+	        .domain(d3.extent(data, function(p) { 
+	            return +p[d]; }))
+	        .range([height, 0]);
+	  }));
 
-  extents = dimensions.map(function(p) { return [0,0]; });
+	  extents = dimensions.map(function(p) { return [0,0]; });
 
-  // Add grey background lines for context.
-  background = svg.append("g")
-      .attr("class", "background")
-    .selectAll("path")
-      .data(data)
-    .enter().append("path")
-      .attr("d", path);
+	  // Add grey background lines for context.
+	  background = svg.append("g")
+	      .attr("class", "background")
+	    .selectAll("path")
+	      .data(data)
+	    .enter().append("path")
+	      .attr("d", path);
 
-  // Add blue foreground lines for focus.
-  foreground = svg.append("g")
-      .attr("class", "foreground")
-    .selectAll("path")
-      .data(data)
-    .enter().append("path")
-      .attr("d", path);
+	  // Add blue foreground lines for focus.
+	  foreground = svg.append("g")
+	      .attr("class", "foreground")
+	    .selectAll("path")
+	      .data(data)
+	    .enter().append("path")
+	      .attr("d", path);
 
-  // Add a group element for each dimension.
-  var g = svg.selectAll(".dimension")
-      .data(dimensions)
-    .enter().append("g")
-      .attr("class", "dimension")
-      .attr("transform", function(d) {  return "translate(" + x(d) + ")"; })
-      .call(d3.drag()
-        .subject(function(d) { return {x: x(d)}; })
-        );
-  // Add an axis and title.
-  g.append("g")
-      .attr("class", "axis")
-      .each(function(d) {  d3.select(this).call(d3.axisLeft(y[d]));})
-      //text does not show up because previous line breaks somehow
-    .append("text")
-      .style("text-anchor", "middle")
-      .attr("y", -9) 
-      .text(function(d) { return d; });
+	  // Add a group element for each dimension.
+	  var g = svg.selectAll(".dimension")
+	      .data(dimensions)
+	    .enter().append("g")
+	      .attr("class", "dimension")
+	      .attr("transform", function(d) {  return "translate(" + x(d) + ")"; })
+	      .call(d3.drag()
+	        .subject(function(d) { return {x: x(d)}; })
+	        );
+	  // Add an axis and title.
+	  g.append("g")
+	      .attr("class", "axis")
+	      .each(function(d) {  d3.select(this).call(d3.axisLeft(y[d]));})
+	      //text does not show up because previous line breaks somehow
+	    .append("text")
+	      .style("text-anchor", "middle")
+	      .attr("y", -9) 
+	      .text(function(d) { return d; });
 
-  // Add and store a brush for each axis.
-  g.append("g")
-      .attr("class", "brush")
-      .each(function(d) {
-        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush start", brushstart).on("brush", brush_parallel_chart));
-      })
-    .selectAll("rect")
-      .attr("x", -8)
-      .attr("width", 16);
-});
+	  // Add and store a brush for each axis.
+	  g.append("g")
+	      .attr("class", "brush")
+	      .each(function(d) {
+	        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush start", brushstart).on("brush", brush_parallel_chart));
+	      })
+	    .selectAll("rect")
+	      .attr("x", -8)
+	      .attr("width", 16);
+	});
 
-function position(d) {
-  var v = dragging[d];
-  return v == null ? x(d) : v;
-}
+	function position(d) {
+	  var v = dragging[d];
+	  return v == null ? x(d) : v;
+	}
 
-function transition(g) {
-  return g.transition().duration(500);
-}
+	function transition(g) {
+	  return g.transition().duration(500);
+	}
 
-// Returns the path for a given data point.
-function path(d) {
-  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
-}
+	// Returns the path for a given data point.
+	function path(d) {
+	  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
+	}
 
-function brushstart() {
-  d3.event.sourceEvent.stopPropagation();
-}
+	function brushstart() {
+	  d3.event.sourceEvent.stopPropagation();
+	}
 
- 
-// Handles a brush event, toggling the display of foreground lines.
-function brush_parallel_chart() {
-    d3.event.sourceEvent.stopPropagation();
-    for(var i=0;i<dimensions.length;++i){
-        if(d3.event.target==y[dimensions[i]].brush) {
-            extents[i]=d3.event.selection.map(y[dimensions[i]].invert,y[dimensions[i]]);
-        }
-    }
-      foreground.style("display", function(d) {
-        return dimensions.every(function(p, i) {
-            if(extents[i][0]==0) {
-                return true;
-            }
-          return extents[i][1] <= d[p] && d[p] <= extents[i][0];
-        }) ? null : "none";
-      });
-}
+	 
+	// Handles a brush event, toggling the display of foreground lines.
+	function brush_parallel_chart() {
+	    d3.event.sourceEvent.stopPropagation();
+	    for(var i=0;i<dimensions.length;++i){
+	        if(d3.event.target==y[dimensions[i]].brush) {
+	            extents[i]=d3.event.selection.map(y[dimensions[i]].invert,y[dimensions[i]]);
+	        }
+	    }
+	      foreground.style("display", function(d) {
+	      	
+	        return dimensions.every(function(p, i) {
+	        	console.log(i)
+	        	console.log(p)
+	            if(extents[i][0]==0) {
+	                return true;
+	            }
+	          return extents[i][1] <= d[p] && d[p] <= extents[i][0];
+	        }) ? null : "none";
+	      });
+	}
 
 }
