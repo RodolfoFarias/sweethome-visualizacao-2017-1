@@ -34,7 +34,7 @@ var init =  function(mymap){
   			<input class="radio" type="radio" name="section" value="healthcare">Healthcare <br>
   			<input class="radio" type="radio" name="section" value="sustenance">Sustenance <br>
   			<input class="radio" type="radio" name="section" value="transportation">Transportation <br>
-  			<input class="radio" type="radio" name="section" value="others">Others <br>
+  			<input class="radio" type="radio" name="section" value="None">None <br>
 		</form>`; 
     	return div;
 	};
@@ -69,10 +69,6 @@ var init =  function(mymap){
         		break;
         	case "transportation":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
-				updateLegend(mymap, color);
-        		break;
-        	case "others":
-        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, others);
 				updateLegend(mymap, color);
         		break;
 		}
@@ -293,8 +289,9 @@ var createGraph = function(map){
 	    	d == "Data Coleta" ||
 	    	d === "Area Total (m2)" ||
 	    	d == "Taxa Condomínio" ||
-		d == "LatLng" ||
-		d == "Others" ||
+			d == "LatLng" ||
+			d == "Others" ||
+			d == "visibility" ||
 	    	d == "Tipo") {
 	        return false;
 	    }
