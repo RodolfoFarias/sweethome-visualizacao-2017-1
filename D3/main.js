@@ -346,7 +346,7 @@ var createGraph = function(map){
 	  g.append("g")
 	      .attr("class", "brush")
 	      .each(function(d) {
-	        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush start", brushstart).on("brush", brush_parallel_chart));
+	        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush start", brush_parallel_chart).on("brush", brush_parallel_chart));
 	      })
 	    .selectAll("rect")
 	      .attr("x", -8)
@@ -358,22 +358,10 @@ var createGraph = function(map){
 	  return v == null ? x(d) : v;
 	}
 
-	function transition(g) {
-	  return g.transition().duration(500);
-	}
-
 	// Returns the path for a given data point.
 	function path(d) {
 	  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
 	}
-
-	function brushstart() {
-	  d3.event.sourceEvent.stopPropagation();
-	  console.log(d3.event.selection);
-	  brush_parallel_chart();
-
-	}
-
 	 
 	// Handles a brush event, toggling the display of foreground lines.
 	function brush_parallel_chart() {
