@@ -271,7 +271,7 @@ var createGraph = function(map){
 
 	d3.csv("some.csv", function(error, data) {
 		//make markers on map
-		//createMarkers(map, data)
+		createMarkers2(map, data)
 
 	  // Extract the list of dimensions and create a scale for each.
 	    //data[0] contains the header elements, then for all elements in the header
@@ -399,4 +399,42 @@ var createMarkers = function(map, data){
 	});
 
     map.addLayer(markers);
+}
+
+
+var createMarkers2 = function(map, data) {   
+
+	//var svgLayer = L.svg();
+	//svgLayer.addTo(map);
+	/* We simply pick up the SVG from the map object */
+	var svg = d3.select(map.getPanes().overlayPane).select("svg"),
+	g = svg.append("g");
+
+	data.forEach(function(d) {
+		d.LatLng = new L.LatLng(d["Latitude"],d["Longitude"])
+	})
+
+
+	var feature = g.selectAll("circle")
+			.data(data)
+			.enter().append("circle")
+			.style("stroke", "black")  
+			.style("opacity", .6) 
+			.style("fill", "red")
+			.attr("r", 20)
+			.attr("class", "leaflet-zoom-hide"); 
+
+	
+	map.on("viewreset", update);
+		update();
+
+		function update() {
+			feature.attr("transform", 
+			function(d) { 
+				return "translate("+ 
+					map.latLngToLayerPoint(d.LatLng).x +","+ 
+					map.latLngToLayerPoint(d.LatLng).y +")";
+				}
+			)
+		}
 }
