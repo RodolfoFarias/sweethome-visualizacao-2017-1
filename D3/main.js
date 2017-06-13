@@ -6,7 +6,6 @@ window.onload = function(){
 var myOpacity = 0.4;
 var grid = new Array();
 var color
-
 var init =  function(mymap){
 
 	mymap = L.map('mapid').setView([-8.0620287, -34.8987418], 13);
@@ -261,17 +260,20 @@ var createGraph = function(map){
 	var svg = d3.select(".graph").append("svg")
     	.attr("width", width + margin.left + margin.right)
     	.attr("height", height + margin.top + margin.bottom)
-  	.append("g")
-    	.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     	.on("mouseover", function () {map.dragging.disable();})
-        .on("mouseout", function () {map.dragging.enable();});
+        .on("mouseout", function () {map.dragging.enable();})
+  	.append("g")
+    	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
 
 
 	d3.csv("some.csv", function(error, data) {
 
+		myData = data;
+		myMap = map;
 
+		data.forEach(function(d) {d.visibility = true;})
 
 	    //make markers on map
 		createMarkers2(map, data)	    
@@ -365,6 +367,7 @@ var createGraph = function(map){
 	 
 	// Handles a brush event, toggling the display of foreground lines.
 	function brush_parallel_chart() {
+		
 	    d3.event.sourceEvent.stopPropagation();
 	    for(var i=0;i<dimensions.length;++i){
 	        if(d3.event.target==y[dimensions[i]].brush) {
@@ -376,11 +379,21 @@ var createGraph = function(map){
 	        return dimensions.every(function(p, i) {
 	        	
 	            if(extents[i][0]==extents[i][1]) {
+	            	d.visibility = true;
 	                return true;
+	            }else {
+	            	if(extents[i][1] <= d[p] && d[p] <= extents[i][0]) {
+	            		d.visibility = true;
+	            		return true
+	            	} else {
+	            		d.visibility = false;
+	            		return false
+	            	}
 	            }
-	          return extents[i][1] <= d[p] && d[p] <= extents[i][0];
+	          //return extents[i][1] <= d[p] && d[p] <= extents[i][0];
 	        }) ? null : "none";
 	      });
+	    updateMarkes()
 	}
 
 }
@@ -414,7 +427,7 @@ var createMarkers2 = function(map, data) {
 
 
 	var feature = g.selectAll("circle")
-			.data(data)
+			.data(data.filter(function(d) {return d.visibility}))
 			.enter().append("circle")
 			.style("stroke", "black")  
 			.style("opacity", .6) 
@@ -425,15 +438,30 @@ var createMarkers2 = function(map, data) {
 	
     map.on("viewreset", update);
     map.on("moveend", update);
-		update();
+	update();
 
-		function update() {
-			feature.attr("transform", 
-			function(d) { 
-				return "translate("+ 
-					map.latLngToLayerPoint(d.LatLng).x +","+ 
-					map.latLngToLayerPoint(d.LatLng).y +")";
-				}
-			)
-		}
+	function update() {
+		feature.attr("transform", 
+		function(d) { 
+			return "translate("+ 
+				map.latLngToLayerPoint(d.LatLng).x +","+ 
+				map.latLngToLayerPoint(d.LatLng).y +")";
+			}
+		)
+	}
+}
+
+var updateMarkes = function() {
+
+	
+
+			d3.selectAll("circle")
+			.data(myData.filter(function(d) {return !d.visibility}))
+			.style("visibility", "hidden")
+
+
+			d3.selectAll("circle")
+			.data(myData.filter(function(d) {return d.visibility}))
+			.style("visibility", "visible") 
+
 }
