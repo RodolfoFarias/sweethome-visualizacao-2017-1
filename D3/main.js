@@ -269,9 +269,8 @@ var createGraph = function(map){
 
 
 
-	d3.csv("residencial.csv", function(error, data) {
+	d3.csv("some.csv", function(error, data) {
 
-	    data = data.filter(function(d){return (+d.Preço) <= 1500000})
 
 
 	    //make markers on map
@@ -304,7 +303,7 @@ var createGraph = function(map){
 	          .range([height, 0]);	      
 	  }));
 
-	    	      debugger
+	    	      
 
 	  extents = dimensions.map(function(p) { return [0,0]; });
 
@@ -370,6 +369,9 @@ var createGraph = function(map){
 
 	function brushstart() {
 	  d3.event.sourceEvent.stopPropagation();
+	  console.log(d3.event.selection);
+	  brush_parallel_chart();
+
 	}
 
 	 
@@ -384,9 +386,8 @@ var createGraph = function(map){
 	      foreground.style("display", function(d) {
 	      	
 	        return dimensions.every(function(p, i) {
-	        	console.log(i)
-	        	//console.log(p)
-	            if(extents[i][0]==0) {
+	        	
+	            if(extents[i][0]==extents[i][1]) {
 	                return true;
 	            }
 	          return extents[i][1] <= d[p] && d[p] <= extents[i][0];
