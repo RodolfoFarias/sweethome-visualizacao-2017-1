@@ -70,7 +70,7 @@ var init =  function(mymap){
         	case "transportation":
         		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
 				updateLegend(mymap, color);
-        		break;
+        		break;	
 		}
 	}
 
@@ -192,7 +192,7 @@ var createSlider = function(map, grid){
 	slider.onAdd = function (map) {
     	var div = L.DomUtil.create('div', 'slider');
 
-    	div.innerHTML ='<input type="range" id="myRange" value="40">'; 
+    	div.innerHTML =	`<input type="range" id="myRange" value="40">`
     	return div;
 	};
 
@@ -429,7 +429,7 @@ var createMarkers2 = function(map, data) {
 			.style("stroke", "black")  
 			.style("opacity", .6) 
 			.style("fill", "red")
-			.attr("r", 10)
+			.attr("r", 5)
 			.attr("class", "leaflet-zoom-hide"); 
 
 	

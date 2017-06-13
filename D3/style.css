@@ -6,13 +6,29 @@
 .legend {
     line-height: 18px;
     color: #555;
+    padding: 0px 0px;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+
 }
 .legend i {
-    width: 40px;
+    width: 20px;
     height: 18px;
     float: left;
     margin-right: 8px;
     opacity: 0.7;
+
+
+}
+
+.legend text{
+
+	margin-right: 5px;
+	width: 20px;
+    height: 18px;
+
 }
 
 svg {
@@ -47,4 +63,31 @@ svg {
   fill: black;
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
   cursor: move;
+}
+
+.radiobox {
+	padding: 0px 0px;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+.slider {
+	padding: 0px 0px;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+
+
+.graph{
+	padding: 0px 0px;
+	font: 10px sans-serif;
+    background: blue;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
 }
