@@ -269,10 +269,14 @@ var createGraph = function(map){
 
 
 
-	d3.csv("some.csv", function(error, data) {
-		//make markers on map
-		createMarkers2(map, data)
+	d3.csv("residencial.csv", function(error, data) {
 
+	    data = data.filter(function(d){return (+d.Preço) <= 1500000})
+
+
+	    //make markers on map
+		createMarkers2(map, data)	    
+	    
 	  // Extract the list of dimensions and create a scale for each.
 	    //data[0] contains the header elements, then for all elements in the header
 	    //different than "name" it creates and y axis in a dictionary by variable name
@@ -288,14 +292,19 @@ var createGraph = function(map){
 	    	d == "Data Coleta" ||
 	    	d === "Area Total (m2)" ||
 	    	d == "Taxa CondomÃ­nio" ||
+		d == "LatLng" ||
+		d == "Others" ||
 	    	d == "Tipo") {
 	        return false;
 	    }
+	      
 	    return y[d] = d3.scaleLinear()
 	        .domain(d3.extent(data, function(p) { 
 	            return +p[d]; }))
-	        .range([height, 0]);
+	          .range([height, 0]);	      
 	  }));
+
+	    	      debugger
 
 	  extents = dimensions.map(function(p) { return [0,0]; });
 
@@ -421,11 +430,12 @@ var createMarkers2 = function(map, data) {
 			.style("stroke", "black")  
 			.style("opacity", .6) 
 			.style("fill", "red")
-			.attr("r", 20)
+			.attr("r", 10)
 			.attr("class", "leaflet-zoom-hide"); 
 
 	
-	map.on("viewreset", update);
+    map.on("viewreset", update);
+    map.on("moveend", update);
 		update();
 
 		function update() {
