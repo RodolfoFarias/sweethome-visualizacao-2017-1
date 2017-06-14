@@ -350,7 +350,7 @@ var createGraph = function(map){
 	  g.append("g")
 	      .attr("class", "brush")
 	      .each(function(d) {
-	        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush start", brush_parallel_chart).on("brush", brush_parallel_chart));
+	        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush", brush_parallel_chart));
 	      })
 	    .selectAll("rect")
 	      .attr("x", -8)
@@ -458,7 +458,7 @@ var updateMarkes = function() {
 
 	
 
-			d3.selectAll("circle")
+			var feature = d3.selectAll("circle")
 			.data(myData.filter(function(d) {return !d.visibility}))
 			.style("visibility", "hidden")
 
@@ -466,6 +466,18 @@ var updateMarkes = function() {
 			d3.selectAll("circle")
 			.data(myData.filter(function(d) {return d.visibility}))
 			.style("visibility", "visible") 
+
+			update();
+
+			function update() {
+				feature.attr("transform", 
+				function(d) { 
+					return "translate("+ 
+						myMap.latLngToLayerPoint(d.LatLng).x +","+ 
+						myMap.latLngToLayerPoint(d.LatLng).y +")";
+					}
+				)
+	}
 
 }
 
