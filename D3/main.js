@@ -268,7 +268,7 @@ var createGraph = function(map){
 
 
 
-	d3.csv("some.csv", function(error, data) {
+	d3.csv("apartments.csv", function(error, data) {
 
 		myData = data;
 		myMap = map;
@@ -291,11 +291,12 @@ var createGraph = function(map){
 	    	d == "Longitude" || 
 	    	d == "Tipo Vendedor" || 
 	    	d == "Data Coleta" ||
-	    	d === "Area Total (m2)" ||
+	    	d == "Area Total (m2)" ||
 	    	d == "Taxa Condomínio" ||
 			d == "LatLng" ||
 			d == "Others" ||
 			d == "visibility" ||
+			d == "IPTU" ||
 	    	d == "Tipo") {
 	        return false;
 	    }

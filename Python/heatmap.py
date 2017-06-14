@@ -59,13 +59,6 @@ with open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Pytho
 
     count = 0
     for row in reader:
-        print(len(row['Preço']) != 0 and
-           len(row['Quartos']) != 0 and
-           len(row['Suítes']) != 0 and
-           len(row['Área Útil (m2)']) != 0 and
-           len(row['Vagas']) != 0 and
-           len(row['Taxa Condomínio']) != 0 )
-        
         if(len(row['Preço']) != 0 and
            len(row['Quartos']) != 0 and
            len(row['Suítes']) != 0 and
@@ -79,19 +72,51 @@ with open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Pytho
                 suites += float(row['Suítes']);
                 area += float(row['Área Útil (m2)']);
                 vagas += float(row['Vagas']);
-                taxa += Decimal(row['Taxa Condomínio']);
+                taxa += float(row['Taxa Condomínio']);
 
-    print(preco/count)
-    print(count)
+    preco = preco/count
+    quartos = quartos/count
+    suites = suites/count
+    area = area/count
+    vagas = vagas/count
+    taxa = taxa/count
+    count = 0
+    
+    reader2 = csv.DictReader(open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/data/recife/anuncios-de-imoveis-recife-pe.csv', encoding="utf8"))
+
+    for row in reader2:  
+
         
-    #for row in reader:
-     #   row['Education'] = hits(row['Latitude'], row['Longitude'], 1000, 'Education')
-      #  row['Entertainment'] = hits(row['Latitude'], row['Longitude'], 1000, 'Entertainment')
-       # row['Financial'] = hits(row['Latitude'], row['Longitude'], 1000, 'Financial')
-        #row['Healthcare'] = hits(row['Latitude'], row['Longitude'], 1000, 'Healthcare')
-        #row['Sustenance'] = hits(row['Latitude'], row['Longitude'], 1000, 'Sustenance')
-        #row['Transportation'] = hits(row['Latitude'], row['Longitude'], 1000, 'Transportation')
-        #row['Others'] = hits(row['Latitude'], row['Longitude'], 1000, 'Others')
-        #writer.writerow(row)
+        if(len(row['Preço']) != 0 and
+           len(row['Quartos']) != 0 and
+           len(row['Suítes']) != 0 and
+           len(row['Área Útil (m2)']) != 0 and
+           len(row['Vagas']) != 0 and
+           len(row['Taxa Condomínio']) != 0 and
+           len(row['Latitude']) != 0 and
+           len(row['Longitude']) != 0 and
+           len(row['Tipo']) != 0 and
+           float(row['Preço']) < (2.5 * preco) and
+           float(row['Quartos']) < (2.5 * quartos) and
+           float(row['Suítes']) < (2.5 * suites) and
+           float(row['Área Útil (m2)']) < (2.5 * area) and
+           float(row['Vagas']) < (2.5 * vagas) and
+           float(row['Taxa Condomínio']) < (2.5 * taxa) and
+           float(row['Longitude']) < -33 and
+           float(row['Longitude']) > -35 and
+           float(row['Latitude']) < -7 and
+           float(row['Latitude']) > -9 and
+           row["Tipo"] == "Residencial" 
+                ):
+                
+                count = count + count;
+        
+                row['Education'] = hits(row['Latitude'], row['Longitude'], 1000, 'Education')
+                row['Entertainment'] = hits(row['Latitude'], row['Longitude'], 1000, 'Entertainment')
+                row['Financial'] = hits(row['Latitude'], row['Longitude'], 1000, 'Financial')
+                row['Healthcare'] = hits(row['Latitude'], row['Longitude'], 1000, 'Healthcare')
+                row['Sustenance'] = hits(row['Latitude'], row['Longitude'], 1000, 'Sustenance')
+                row['Transportation'] = hits(row['Latitude'], row['Longitude'], 1000, 'Transportation')
+                writer.writerow(row)
 
     
