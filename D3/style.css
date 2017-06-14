@@ -81,7 +81,18 @@ svg {
     border-radius: 5px;
 }
 
+.slider text{
+	text-align: right;
+}
 
+.check {
+	padding: 0px 0px;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    margin-right: 8px;
+}
 
 .graph{
 	padding: 0px 0px;

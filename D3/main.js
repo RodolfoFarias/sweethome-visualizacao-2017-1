@@ -194,7 +194,9 @@ var createSlider = function(map, grid){
 	slider.onAdd = function (map) {
     	var div = L.DomUtil.create('div', 'slider');
 
-    	div.innerHTML =	`<input type="range" id="myRange" value="40">`
+    	div.innerHTML =	`<text>Opacity Slider</text>
+    					<br>
+    					 <input type="range" id="myRange" value="40">`
     	return div;
 	};
 
@@ -466,7 +468,7 @@ var updateMarkes = function() {
 
 }
 
-var setVisibilityBuildings = function(flag){
+var setVisibilityApartments = function(flag){
 
 	if(flag) {
 		updateMarkes();
@@ -482,16 +484,25 @@ var createVisibilityCheck = function(map){
 	check.onAdd = function (map) {
 	   	var div = L.DomUtil.create('div', 'check');
 
-	   	div.innerHTML =	`<input type="checkbox" name="buildings" id="checkbox" checked="checked"> Show buildings Location<br>`
+	   	div.innerHTML =	`<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Show apartments location<br>`
 	   	return div;
 	};
 
 	check.addTo(map);
 
+	check.getContainer().addEventListener('mouseover', function () {
+        map.dragging.disable();
+    });
+
+	//set on again
+    check.getContainer().addEventListener('mouseout', function () {
+        map.dragging.enable();
+    });
+
 
 	var refCheckBox = document.getElementById('checkbox');
 
 	refCheckBox.onchange = function(){
-		setVisibilityBuildings(this.checked);
+		setVisibilityApartments(this.checked);
 	}
 }

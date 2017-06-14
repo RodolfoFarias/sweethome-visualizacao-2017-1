@@ -1,6 +1,7 @@
 #C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/RecifeTransportation.geojson
 import geojson
 import csv
+from decimal import Decimal
 from geopy.distance import vincenty
 
 def calcDist(lat1, long1, lat2, long2):
@@ -43,18 +44,54 @@ def hits(lat, long, radius, section):
 
 #f.close();
 
-with open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/data/recife/anuncios-de-imoveis-recife-pe.csv', encoding="utf8") as csvfile, open('some.csv', 'w', encoding='utf8' ) as f:
+with open('C:/Users/Rodolfo/Documents/GitHub/sweethome-visualizacao-2017-1/Python/data/recife/anuncios-de-imoveis-recife-pe.csv', encoding="utf8") as csvfile, open('apartments.csv', 'w', encoding='utf8' ) as f:
     reader = csv.DictReader(csvfile)
     writer = csv.DictWriter(f, fieldnames=reader.fieldnames, lineterminator='\n')
     writer.writeheader()
+
+    preco = 0;
+    quartos = 0;
+    suites = 0;
+    area = 0;
+    vagas = 0;
+    taxa = 0;
+    iptu = 0;
+
+    count = 0
     for row in reader:
-        row['Education'] = hits(row['Latitude'], row['Longitude'], 1000, 'Education')
-        row['Entertainment'] = hits(row['Latitude'], row['Longitude'], 1000, 'Entertainment')
-        row['Financial'] = hits(row['Latitude'], row['Longitude'], 1000, 'Financial')
-        row['Healthcare'] = hits(row['Latitude'], row['Longitude'], 1000, 'Healthcare')
-        row['Sustenance'] = hits(row['Latitude'], row['Longitude'], 1000, 'Sustenance')
-        row['Transportation'] = hits(row['Latitude'], row['Longitude'], 1000, 'Transportation')
-        row['Others'] = hits(row['Latitude'], row['Longitude'], 1000, 'Others')
-        writer.writerow(row)
+        print(len(row['Preço']) != 0 and
+           len(row['Quartos']) != 0 and
+           len(row['Suítes']) != 0 and
+           len(row['Área Útil (m2)']) != 0 and
+           len(row['Vagas']) != 0 and
+           len(row['Taxa Condomínio']) != 0 )
+        
+        if(len(row['Preço']) != 0 and
+           len(row['Quartos']) != 0 and
+           len(row['Suítes']) != 0 and
+           len(row['Área Útil (m2)']) != 0 and
+           len(row['Vagas']) != 0 and
+           len(row['Taxa Condomínio']) != 0 ):
+            
+                count = count + 1;
+                preco += float(row['Preço']);
+                quartos += float(row['Quartos']);
+                suites += float(row['Suítes']);
+                area += float(row['Área Útil (m2)']);
+                vagas += float(row['Vagas']);
+                taxa += Decimal(row['Taxa Condomínio']);
+
+    print(preco/count)
+    print(count)
+        
+    #for row in reader:
+     #   row['Education'] = hits(row['Latitude'], row['Longitude'], 1000, 'Education')
+      #  row['Entertainment'] = hits(row['Latitude'], row['Longitude'], 1000, 'Entertainment')
+       # row['Financial'] = hits(row['Latitude'], row['Longitude'], 1000, 'Financial')
+        #row['Healthcare'] = hits(row['Latitude'], row['Longitude'], 1000, 'Healthcare')
+        #row['Sustenance'] = hits(row['Latitude'], row['Longitude'], 1000, 'Sustenance')
+        #row['Transportation'] = hits(row['Latitude'], row['Longitude'], 1000, 'Transportation')
+        #row['Others'] = hits(row['Latitude'], row['Longitude'], 1000, 'Others')
+        #writer.writerow(row)
 
     
