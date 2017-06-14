@@ -350,7 +350,7 @@ var createGraph = function(map){
 	  g.append("g")
 	      .attr("class", "brush")
 	      .each(function(d) {
-	        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush", brush_parallel_chart));
+	        d3.select(this).call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]]).on("brush", brush_parallel_chart).on("brush start", brush_parallel_chart));
 	      })
 	    .selectAll("rect")
 	      .attr("x", -8)
