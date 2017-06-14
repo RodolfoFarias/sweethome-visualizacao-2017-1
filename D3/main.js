@@ -88,6 +88,8 @@ var init =  function(mymap){
 	
 	createLegend(mymap, color);
 
+	createVisibilityCheck(mymap);
+
 
 	//createGraph(mymap);
 	
@@ -395,7 +397,8 @@ var createGraph = function(map){
 
 }
 
-var createMarkers = function(map, data){
+//older markers creator
+/*var createMarkers = function(map, data){
 
 	var markers = new L.FeatureGroup();
 
@@ -407,7 +410,7 @@ var createMarkers = function(map, data){
 	});
 
     map.addLayer(markers);
-}
+}*/
 
 
 var createMarkers2 = function(map, data) {   
@@ -461,4 +464,34 @@ var updateMarkes = function() {
 			.data(myData.filter(function(d) {return d.visibility}))
 			.style("visibility", "visible") 
 
+}
+
+var setVisibilityBuildings = function(flag){
+
+	if(flag) {
+		updateMarkes();
+	} else {
+		d3.selectAll("circle").style("visibility", "hidden");
+	}
+}
+
+var createVisibilityCheck = function(map){
+
+	var check = L.control({position: 'topright'});
+
+	check.onAdd = function (map) {
+	   	var div = L.DomUtil.create('div', 'check');
+
+	   	div.innerHTML =	`<input type="checkbox" name="buildings" id="checkbox" checked="checked"> Show buildings Location<br>`
+	   	return div;
+	};
+
+	check.addTo(map);
+
+
+	var refCheckBox = document.getElementById('checkbox');
+
+	refCheckBox.onchange = function(){
+		setVisibilityBuildings(this.checked);
+	}
 }
