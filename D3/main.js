@@ -292,7 +292,6 @@ var createGraph = function(map){
 	    	d == "Tipo Vendedor" || 
 	    	d == "Data Coleta" ||
 	    	d == "Area Total (m2)" ||
-	    	d == "Taxa Condomínio" ||
 			d == "LatLng" ||
 			d == "Others" ||
 			d == "visibility" ||
