@@ -369,7 +369,6 @@ var createGraph = function(map){
 	// Handles a brush event, toggling the display of foreground lines.
 	function brush_parallel_chart() {
 		
-	    d3.event.sourceEvent.stopPropagation();
 	    for(var i=0;i<dimensions.length;++i){
 	        if(d3.event.target==y[dimensions[i]].brush) {
 	            extents[i]=d3.event.selection.map(y[dimensions[i]].invert,y[dimensions[i]]);
@@ -435,8 +434,11 @@ var createMarkers2 = function(map, data) {
 			.style("opacity", .6) 
 			.style("fill", "red")
 			.attr("r", 5)
-			.attr("class", "leaflet-zoom-hide"); 
-
+			.attr("class", "leaflet-zoom-hide")
+			.attr("pointer-events","visible")
+			.on("click", function(d) {
+    			console.log(d);
+			})
 	
     map.on("viewreset", update);
     map.on("moveend", update);
@@ -458,15 +460,21 @@ var updateMarkes = function() {
 	
 
 			var feature = d3.selectAll("circle")
-			.data(myData.filter(function(d) {return !d.visibility}))
 			.style("visibility", "hidden")
 
 
 			d3.selectAll("circle")
 			.data(myData.filter(function(d) {return d.visibility}))
-			.style("visibility", "visible") 
+			.style("visibility", "visible")
+			.attr("transform", 
+				function(d) { 
+					return "translate("+ 
+						myMap.latLngToLayerPoint(d.LatLng).x +","+ 
+						myMap.latLngToLayerPoint(d.LatLng).y +")";
+					}
+				)
 
-			update();
+			/*update();
 
 			function update() {
 				feature.attr("transform", 
@@ -476,7 +484,7 @@ var updateMarkes = function() {
 						myMap.latLngToLayerPoint(d.LatLng).y +")";
 					}
 				)
-	}
+			}*/
 
 }
 
