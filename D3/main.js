@@ -28,19 +28,36 @@ var init =  function(mymap){
 
     	div.innerHTML =` 
     		<form action="" >
-  			<input class="radio" type="radio" name="section" value="education" checked="checked">Education<br>
-  			<input class="radio" type="radio" name="section" value="entertainment">Entertainment<br>
-  			<input class="radio" type="radio" name="section" value="financial">Financial <br>
-  			<input class="radio" type="radio" name="section" value="healthcare">Healthcare <br>
-  			<input class="radio" type="radio" name="section" value="sustenance">Sustenance <br>
-  			<input class="radio" type="radio" name="section" value="transportation">Transportation <br>
-  			<input class="radio" type="radio" name="section" value="None">None <br>
-		</form>`; 
+  				<input class="radio" type="radio" name="section" value="education" checked="checked">Education<br>
+  				<input class="radio" type="radio" name="section" value="entertainment">Entertainment<br>
+  				<input class="radio" type="radio" name="section" value="financial">Financial <br>
+  				<input class="radio" type="radio" name="section" value="healthcare">Healthcare <br>
+  				<input class="radio" type="radio" name="section" value="sustenance">Sustenance <br>
+  				<input class="radio" type="radio" name="section" value="transportation">Transportation <br>
+  				<input class="radio" type="radio" name="section" value="None">None <br>
+			</form>
+			<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Show apartments location<br>
+			<text>Opacity Slider</text>
+    		<br>
+    		<input type="range" id="myRange" value="40">
+			`
+			; 
     	return div;
 	};
 
 	command.addTo(mymap);
 
+
+	command.getContainer().addEventListener('mouseover', function () {
+        myMap.dragging.disable();
+        myMap.doubleClickZoom.disable();
+    });
+
+	//set on again
+    command.getContainer().addEventListener('mouseout', function () {
+        myMap.dragging.enable();
+        myMap.doubleClickZoom.enable();
+    });
 
 	// add the event handler
 	function handleCommand() {
@@ -189,7 +206,7 @@ var createLegend = function(map, color){
 }
 
 var createSlider = function(map, grid){
-	var slider = L.control({position: 'topright'});
+	/*var slider = L.control({position: 'topright'});
 
 	slider.onAdd = function (map) {
     	var div = L.DomUtil.create('div', 'slider');
@@ -210,7 +227,7 @@ var createSlider = function(map, grid){
 	//set on again
     slider.getContainer().addEventListener('mouseout', function () {
         map.dragging.enable();
-    });
+    });*/
 
 	var refSlider = document.getElementById('myRange');
 
@@ -499,7 +516,7 @@ var setVisibilityApartments = function(flag){
 
 var createVisibilityCheck = function(map){
 
-	var check = L.control({position: 'topright'});
+	/*var check = L.control({position: 'topright'});
 
 	check.onAdd = function (map) {
 	   	var div = L.DomUtil.create('div', 'check');
@@ -517,7 +534,7 @@ var createVisibilityCheck = function(map){
 	//set on again
     check.getContainer().addEventListener('mouseout', function () {
         map.dragging.enable();
-    });
+    });*/
 
 
 	var refCheckBox = document.getElementById('checkbox');
