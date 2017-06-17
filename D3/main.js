@@ -24,7 +24,7 @@ var init =  function(mymap){
     var command = L.control({position: 'topright'});
 
 	command.onAdd = function (map) {
-    	var div = L.DomUtil.create('div', 'radiobox');
+    	var div = L.DomUtil.create('div', 'heatmapCtrl');
 
     	div.innerHTML =` 
     		<form action="" >
@@ -36,8 +36,8 @@ var init =  function(mymap){
   				<input class="radio" type="radio" name="section" value="transportation">Transportation <br>
   				<input class="radio" type="radio" name="section" value="None">None <br>
 			</form>
-			<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Show apartments location<br>
-			<text>Opacity Slider</text>
+			<br>
+			<text>Opacidade do Heatmap</text>
     		<br>
     		<input type="range" id="myRange" value="40">
 			`
@@ -211,7 +211,7 @@ var createSlider = function(map, grid){
 	slider.onAdd = function (map) {
     	var div = L.DomUtil.create('div', 'slider');
 
-    	div.innerHTML =	`<text>Opacity Slider</text>
+    	div.innerHTML =	`<text>Opacidade dos u</text>
     					<br>
     					 <input type="range" id="myRange" value="40">`
     	return div;
@@ -516,12 +516,16 @@ var setVisibilityApartments = function(flag){
 
 var createVisibilityCheck = function(map){
 
-	/*var check = L.control({position: 'topright'});
+	var check = L.control({position: 'topright'});
 
 	check.onAdd = function (map) {
 	   	var div = L.DomUtil.create('div', 'check');
 
-	   	div.innerHTML =	`<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Show apartments location<br>`
+	   	div.innerHTML =	`
+	   					<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Show apartments location<br>
+	   					<text>Opacidade dos imóveis</text>
+    					<br>
+    					<input type="range" id="propertiesSlider" value="60">`
 	   	return div;
 	};
 
@@ -529,12 +533,14 @@ var createVisibilityCheck = function(map){
 
 	check.getContainer().addEventListener('mouseover', function () {
         map.dragging.disable();
+        myMap.doubleClickZoom.disable();
     });
 
 	//set on again
     check.getContainer().addEventListener('mouseout', function () {
         map.dragging.enable();
-    });*/
+        myMap.doubleClickZoom.enable();
+    });
 
 
 	var refCheckBox = document.getElementById('checkbox');
@@ -542,4 +548,18 @@ var createVisibilityCheck = function(map){
 	refCheckBox.onchange = function(){
 		setVisibilityApartments(this.checked);
 	}
+
+	var refSlider = document.getElementById('propertiesSlider');
+
+	refSlider.onchange = function(){
+		setPropertiesOpacity(this.value/100)
+	}
 }
+
+
+var setPropertiesOpacity = function(_opacity){
+	d3.selectAll("circle")
+	.style("opacity", _opacity)
+}
+
+

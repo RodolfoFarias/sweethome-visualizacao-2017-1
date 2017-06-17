@@ -65,7 +65,7 @@ svg {
   cursor: move;
 }
 
-.radiobox {
+.heatmapCtrl {
 	padding: 0px 0px;
     background: white;
     background: rgba(255,255,255,0.8);
