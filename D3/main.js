@@ -139,6 +139,8 @@ var init =  function(mymap){
     
 }
 
+
+
 var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap, section){
 
 	var widthTotal =  Math.abs(lat_min - lat_max)
@@ -479,7 +481,7 @@ var createMarkers2 = function(map, data) {
     			tooltip
          			.style("visibility", "visible")
        				.html("Título: " + d.Titulo + ";<br/>" + 
-       					  "Endereço: " + d.Rua + ", " + d.Bairro + ", " + d.CEP + ";<br/>" +
+       					  "Endereço: " + d.Rua + ", " + d.Bairro + ";<br/>" +
        					  "Preço: " + formatter.format(d.Preço) + ";<br/>" +
        					  "Quartos: " + d.Quartos + ";<br/>" +
        					  "Suítes: " + d.Suítes + ";<br/>" +
@@ -567,7 +569,8 @@ var createVisibilityCheck = function(map){
 
 	   	div.innerHTML =	`
 	   					<h3>Controlador dos imóveis</h3>
-	   					<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Mostrar localização dos imóveis<br>
+	   					<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Mostrar imóveis</input>
+	   					<br>
 	   					<text>Opacidade dos imóveis</text>
     					<br>
     					<input type="range" id="propertiesSlider" value="60">`
@@ -588,16 +591,17 @@ var createVisibilityCheck = function(map){
     });
 
 
-	var refCheckBox = document.getElementById('checkbox');
-
-	refCheckBox.onchange = function(){
-		setVisibilityApartments(this.checked);
-	}
-
 	var refSlider = document.getElementById('propertiesSlider');
 
 	refSlider.onchange = function(){
 		setPropertiesOpacity(this.value/100)
+	}
+
+	var refCheckBox = document.getElementById('checkbox');
+
+	refCheckBox.onchange = function(){
+		setVisibilityApartments(this.checked);
+		refSlider.disabled = !this.checked;
 	}
 }
 
