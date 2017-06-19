@@ -6,6 +6,11 @@ window.onload = function(){
 var myOpacity = 0.4;
 var grid = new Array();
 var color
+var formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'BRL',
+  minimumFractionDigits: 2,
+});
 var init =  function(mymap){
 
 	mymap = L.map('mapid').setView([-8.0620287, -34.8987418], 13);
@@ -26,7 +31,8 @@ var init =  function(mymap){
 	command.onAdd = function (map) {
     	var div = L.DomUtil.create('div', 'heatmapCtrl');
 
-    	div.innerHTML =` 
+    	div.innerHTML =`
+    		<h3>Controlador do Heatmap</h3> 
     		<form action="" >
   				<input class="radio" type="radio" name="section" value="education" checked="checked">Educação<br>
   				<input class="radio" type="radio" name="section" value="entertainment">Entretenimento<br>
@@ -59,34 +65,43 @@ var init =  function(mymap){
         myMap.doubleClickZoom.enable();
     });
 
+	var legendRef;    
+
 	// add the event handler
 	function handleCommand() {
 
 		removeGrid(mymap);
+		legendRef.style("visibility", "hidden")
 		switch(this.value) {
     		case "education":
         		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, education);
 				updateLegend(mymap, color);
+				legendRef.style("visibility", "visible")
         		break;
     		case "entertainment":
         		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, entertainment);
 				updateLegend(mymap, color);
+				legendRef.style("visibility", "visible")
         		break;
         	case "financial":
         		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, financial);
-				updateLegend(mymap, color);        		
+				updateLegend(mymap, color);
+				legendRef.style("visibility", "visible")        		
         		break;	
    			case "healthcare":
         		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, healthcare);
 				updateLegend(mymap, color);
+				legendRef.style("visibility", "visible")
         		break;
         	case "sustenance":
         		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, sustenance);
 				updateLegend(mymap, color);
+				legendRef.style("visibility", "visible")
         		break;
         	case "transportation":
         		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, transportation);
 				updateLegend(mymap, color);
+				legendRef.style("visibility", "visible")
         		break;	
 		}
 	}
@@ -104,6 +119,8 @@ var init =  function(mymap){
 	createSlider(mymap, grid);
 	
 	createLegend(mymap, color);
+
+	legendRef = d3.select(".legend")
 
 	createVisibilityCheck(mymap);
 
@@ -463,7 +480,7 @@ var createMarkers2 = function(map, data) {
          			.style("visibility", "visible")
        				.html("Título: " + d.Titulo + ";<br/>" + 
        					  "Endereço: " + d.Rua + ", " + d.Bairro + ", " + d.CEP + ";<br/>" +
-       					  "Preço: " + d.Preço + ";<br/>" +
+       					  "Preço: " + formatter.format(d.Preço) + ";<br/>" +
        					  "Quartos: " + d.Quartos + ";<br/>" +
        					  "Suítes: " + d.Suítes + ";<br/>" +
        					  "Área Útil: " + d["Área Útil (m2)"] + " m²;<br/>" +
@@ -549,7 +566,8 @@ var createVisibilityCheck = function(map){
 	   	var div = L.DomUtil.create('div', 'check');
 
 	   	div.innerHTML =	`
-	   					<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Show apartments location<br>
+	   					<h3>Controlador dos imóveis</h3>
+	   					<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Mostrar localização dos imóveis<br>
 	   					<text>Opacidade dos imóveis</text>
     					<br>
     					<input type="range" id="propertiesSlider" value="60">`
