@@ -40,10 +40,10 @@ var init =  function(mymap){
   				<input class="radio" type="radio" name="section" value="healthcare">Saúde <br>
   				<input class="radio" type="radio" name="section" value="sustenance">Alimentação <br>
   				<input class="radio" type="radio" name="section" value="transportation">Transporte<br>
-  				<input class="radio" type="radio" name="section" value="None">Não mostrar heatmap<br>
+  				<input class="radio" type="radio" name="section" value="None">Não mostrar<br>
 			</form>
 			<br>
-			<text>Opacidade do Heatmap</text>
+			<text>Opacidade</text>
     		<br>
     		<input type="range" id="myRange" value="40">
 			`
@@ -571,7 +571,7 @@ var createVisibilityCheck = function(map){
 	   					<h3>Controlador dos imóveis</h3>
 	   					<input type="checkbox" name="apartments" id="checkbox" checked="checked"> Mostrar imóveis</input>
 	   					<br>
-	   					<text>Opacidade dos imóveis</text>
+	   					<text>Opacidade</text>
     					<br>
     					<input type="range" id="propertiesSlider" value="60">`
 	   	return div;
