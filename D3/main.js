@@ -18,7 +18,7 @@ var init =  function(mymap){
     }).addTo(mymap);
     
 
-    [grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
+    [grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, education);
 	
     // radiobox begin
     var command = L.control({position: 'topright'});
@@ -28,13 +28,13 @@ var init =  function(mymap){
 
     	div.innerHTML =` 
     		<form action="" >
-  				<input class="radio" type="radio" name="section" value="education" checked="checked">Education<br>
-  				<input class="radio" type="radio" name="section" value="entertainment">Entertainment<br>
-  				<input class="radio" type="radio" name="section" value="financial">Financial <br>
-  				<input class="radio" type="radio" name="section" value="healthcare">Healthcare <br>
-  				<input class="radio" type="radio" name="section" value="sustenance">Sustenance <br>
-  				<input class="radio" type="radio" name="section" value="transportation">Transportation <br>
-  				<input class="radio" type="radio" name="section" value="None">None <br>
+  				<input class="radio" type="radio" name="section" value="education" checked="checked">Educação<br>
+  				<input class="radio" type="radio" name="section" value="entertainment">Entretenimento<br>
+  				<input class="radio" type="radio" name="section" value="financial">Financeiro<br>
+  				<input class="radio" type="radio" name="section" value="healthcare">Saúde <br>
+  				<input class="radio" type="radio" name="section" value="sustenance">Alimentação <br>
+  				<input class="radio" type="radio" name="section" value="transportation">Transporte<br>
+  				<input class="radio" type="radio" name="section" value="None">Não mostrar heatmap<br>
 			</form>
 			<br>
 			<text>Opacidade do Heatmap</text>
@@ -65,27 +65,27 @@ var init =  function(mymap){
 		removeGrid(mymap);
 		switch(this.value) {
     		case "education":
-        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, education);
+        		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, education);
 				updateLegend(mymap, color);
         		break;
     		case "entertainment":
-        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, entertainment);
+        		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, entertainment);
 				updateLegend(mymap, color);
         		break;
         	case "financial":
-        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, financial);
+        		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, financial);
 				updateLegend(mymap, color);        		
         		break;	
    			case "healthcare":
-        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, healthcare);
+        		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, healthcare);
 				updateLegend(mymap, color);
         		break;
         	case "sustenance":
-        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, sustenance);
+        		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, sustenance);
 				updateLegend(mymap, color);
         		break;
         	case "transportation":
-        		[grid, color] = drawGrid(-8.115846, -34.998665, -7.951308, -34.774132, 100, mymap, transportation);
+        		[grid, color] = drawGrid(-8.1598, -34.9952, -7.9749, -34.8335, 100, mymap, transportation);
 				updateLegend(mymap, color);
         		break;	
 		}
@@ -110,18 +110,16 @@ var init =  function(mymap){
 
 	//createGraph(mymap);
 	
-	//debugger;
 
-    /*
-    for (var i = 0; i < grid.length; i++) {
+    
+   /* for (var i = 0; i < grid.length; i++) {
     	for (var j = 0; j < grid[i].length; j++) {
     		//id, lat, long
     		console.log(grid[i][j]._leaflet_id + ": [" + grid[i][j].getCenter().lat + ", " + grid[i][j].getCenter().lng + "],")
     	}
-    }
+    }*/
 
-    debugger;
-    */
+    
 }
 
 var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap, section){
@@ -151,7 +149,7 @@ var drawGrid = function(lat_min, long_min, lat_max, long_max, cells, mymap, sect
 					;
 				rect.options.color = d3.interpolateBlues(cor(section[(row * 100) + column].hits))
 				rect.options.className = "rect"
-				if(transportation[(row * 100) + column].hits > 0){
+				if(section[(row * 100) + column].hits > 0){
 					rect.addTo(mymap);
 					grid[row].push(rect);
 				} 
@@ -436,8 +434,15 @@ var createMarkers2 = function(map, data) {
 	//var svgLayer = L.svg();
 	//svgLayer.addTo(map);
 	/* We simply pick up the SVG from the map object */
-	var svg = d3.select(map.getPanes().overlayPane).select("svg"),
+	var svg = d3.select(map.getPanes().overlayPane).select("svg")
+		.style("position", "absolute")
+		.style("z-index", -1),
 	g = svg.append("g");
+
+	var tooltip = d3.select(map.getPanes().overlayPane)
+					.append("div")
+					.attr("class", "tooltip")
+					.style("opacity", .9);	
 
 	data.forEach(function(d) {
 		d.LatLng = new L.LatLng(d["Latitude"],d["Longitude"])
@@ -453,9 +458,31 @@ var createMarkers2 = function(map, data) {
 			.attr("r", 5)
 			.attr("class", "leaflet-zoom-hide")
 			.attr("pointer-events","visible")
-			.on("click", function(d) {
-    			console.log(d);
+			.on("mouseover", function(d) {
+    			tooltip
+         			.style("visibility", "visible")
+       				.html("Título: " + d.Titulo + ";<br/>" + 
+       					  "Endereço: " + d.Rua + ", " + d.Bairro + ", " + d.CEP + ";<br/>" +
+       					  "Preço: " + d.Preço + ";<br/>" +
+       					  "Quartos: " + d.Quartos + ";<br/>" +
+       					  "Suítes: " + d.Suítes + ";<br/>" +
+       					  "Área Útil: " + d["Área Útil (m2)"] + " m²;<br/>" +
+       					  "Vagas: " + d.Vagas + ";<br/>" +
+       					  "Condomínio: " + d.Condomínio + ";<br/>" +
+       					  "Educação: " + d.Educação.substring(0,4) + ";<br/>" +
+       					  "Saúde: " + d.Saúde.substring(0,4) + ";<br/>" +
+       					  "Entretenimento: " + d.Entretenimento.substring(0,4) + ";<br/>" +
+       					  "Transporte: " + d.Transporte.substring(0,4) + ";<br/>" +
+       					  "Alimentação: " + d.Alimentação.substring(0,4) + ";<br/>" + 
+       					  "Finaceiro: " + d.Financeiro.substring(0,4) + ";<br/>"
+       					  )
+         			.style("left", (map.latLngToLayerPoint(d.LatLng).x + 10) +"px")
+         			.style("top", (map.latLngToLayerPoint(d.LatLng).y - 100)+ "px")
 			})
+			.on("mouseout", function(d) {
+       			tooltip
+         			.style("visibility", "hidden")
+       		})
 	
     map.on("viewreset", update);
     map.on("moveend", update);

@@ -24,16 +24,13 @@
 }
 
 .legend text{
-
+	position: relative;
 	margin-right: 5px;
 	width: 20px;
     height: 18px;
 
 }
 
-svg {
-  font: 10px sans-serif;
-}
 
 .background path {
   fill: none;
@@ -102,3 +99,18 @@ svg {
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
 }
+
+div.tooltip {
+  z-index: 10;
+  position: absolute;
+  text-align: center;
+  width: 200px;
+  padding: 0px 0px;
+  background: white;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  margin-right: 8px;
+  z-index: 10;
+}
+
