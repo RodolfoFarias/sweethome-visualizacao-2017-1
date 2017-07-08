@@ -317,7 +317,7 @@ var createGraph = function(map){
 	    //different than "name" it creates and y axis in a dictionary by variable name
 	  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
 	  	
-	    if(	d == "Titulo" || 
+	    if(	d == "Título" || 
 	    	d == "Rua" || 
 	    	d == "Bairro" || 
 	    	d == "CEP" || 
@@ -325,7 +325,7 @@ var createGraph = function(map){
 	    	d == "Longitude" || 
 	    	d == "Tipo Vendedor" || 
 	    	d == "Data Coleta" ||
-	    	d == "Area Total (m2)" ||
+	    	d == "Área Total (m2)" ||
 			d == "LatLng" ||
 			d == "Others" ||
 			d == "visibility" ||
