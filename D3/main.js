@@ -480,7 +480,7 @@ var createMarkers2 = function(map, data) {
 			.on("mouseover", function(d) {
     			tooltip
          			.style("visibility", "visible")
-       				.html("Título: " + d.Titulo + ";<br/>" + 
+       				.html("Título: " + d.Título + ";<br/>" + 
        					  "Endereço: " + d.Rua + ", " + d.Bairro + ";<br/>" +
        					  "Preço: " + formatter.format(d.Preço) + ";<br/>" +
        					  "Quartos: " + d.Quartos + ";<br/>" +
@@ -493,7 +493,7 @@ var createMarkers2 = function(map, data) {
        					  "Entretenimento: " + d.Entretenimento.substring(0,4) + ";<br/>" +
        					  "Transporte: " + d.Transporte.substring(0,4) + ";<br/>" +
        					  "Alimentação: " + d.Alimentação.substring(0,4) + ";<br/>" + 
-       					  "Finaceiro: " + d.Financeiro.substring(0,4) + ";<br/>"
+       					  "Financeiro: " + d.Financeiro.substring(0,4) + ";<br/>"
        					  )
          			.style("left", (map.latLngToLayerPoint(d.LatLng).x + 10) +"px")
          			.style("top", (map.latLngToLayerPoint(d.LatLng).y - 100)+ "px")
